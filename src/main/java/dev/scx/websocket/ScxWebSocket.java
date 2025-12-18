@@ -3,7 +3,6 @@ package dev.scx.websocket;
 import dev.scx.websocket.close_info.ScxWebSocketCloseInfo;
 import dev.scx.websocket.exception.WebSocketException;
 
-import static dev.scx.websocket.WebSocketHelper.createClosePayload;
 import static dev.scx.websocket.WebSocketOpCode.*;
 import static dev.scx.websocket.close_info.WebSocketCloseInfo.NORMAL_CLOSE;
 
@@ -52,14 +51,14 @@ public interface ScxWebSocket extends AutoCloseable {
         return sendFrame(frame);
     }
 
-    default ScxWebSocket sendClose(int code, String reason) {
-        var closePayload = createClosePayload(code, reason);
+    default ScxWebSocket sendClose(ScxWebSocketCloseInfo closeInfo) {
+        var closePayload = closeInfo.toPayload();
         var frame = WebSocketFrame.of(CLOSE, closePayload);
         return sendFrame(frame);
     }
 
-    default ScxWebSocket sendClose(ScxWebSocketCloseInfo closeInfo) {
-        return sendClose(closeInfo.code(), closeInfo.reason());
+    default ScxWebSocket sendClose(int code, String reason) {
+        return sendClose(ScxWebSocketCloseInfo.of(code,reason));
     }
 
     default ScxWebSocket sendClose() {

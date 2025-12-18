@@ -2,8 +2,6 @@ package dev.scx.websocket;
 
 import dev.scx.websocket.close_info.ScxWebSocketCloseInfo;
 
-import static dev.scx.websocket.WebSocketHelper.parseCloseInfo;
-
 /// WebSocketFrame
 ///
 /// @author scx567888
@@ -19,7 +17,7 @@ public record WebSocketFrame(WebSocketOpCode opCode, byte[] payloadData, boolean
     }
 
     public ScxWebSocketCloseInfo getCloseInfo() {
-        return parseCloseInfo(payloadData);
+        return ScxWebSocketCloseInfo.ofPayload(payloadData);
     }
 
 }
