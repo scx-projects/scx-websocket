@@ -1,24 +1,12 @@
-package dev.scx.websocket;
-
-import dev.scx.websocket.close_info.ScxWebSocketCloseInfo;
+package dev.scx.websocket.close_info;
 
 import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 
-import static java.security.MessageDigest.getInstance;
-
-/// WebSocketHelper
+/// ScxWebSocketCloseInfoHelper
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class WebSocketHelper {
-
-    // 生成 Sec-WebSocket-Accept 的方法
-    public static String generateSecWebSocketAccept(String key) {
-        // 根据 WebSocket 协议生成接受密钥
-        return Base64.getEncoder().encodeToString(sha1(key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"));
-    }
+final class ScxWebSocketCloseInfoHelper {
 
     public static ScxWebSocketCloseInfo parseCloseInfo(byte[] frame) {
         int len = frame.length;
@@ -35,7 +23,9 @@ public final class WebSocketHelper {
         return ScxWebSocketCloseInfo.of(code, reason);
     }
 
-    public static byte[] createClosePayload(int code, String reason) {
+    public static byte[] toClosePayload(ScxWebSocketCloseInfo closeInfo) {
+        var code = closeInfo.code();
+        var reason = closeInfo.reason();
         byte[] reasonBytes = reason != null ? reason.getBytes(StandardCharsets.UTF_8) : new byte[0];
         byte[] payload = new byte[2 + reasonBytes.length];
         // 设置状态码
@@ -44,16 +34,6 @@ public final class WebSocketHelper {
         // 设置关闭原因
         System.arraycopy(reasonBytes, 0, payload, 2, reasonBytes.length);
         return payload;
-    }
-
-    public static byte[] sha1(String data) {
-        try {
-            var messageDigest = getInstance("SHA-1");
-            messageDigest.update(data.getBytes());
-            return messageDigest.digest();
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalArgumentException(e);
-        }
     }
 
 }

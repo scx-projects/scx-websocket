@@ -10,8 +10,16 @@ public interface ScxWebSocketCloseInfo {
         return new ScxWebSocketCloseInfoImpl(code, reason);
     }
 
+    static ScxWebSocketCloseInfo ofPayload(byte[] payload) {
+        return ScxWebSocketCloseInfoHelper.parseCloseInfo(payload);
+    }
+
     int code();
 
     String reason();
+
+    default byte[] toPayload() {
+        return ScxWebSocketCloseInfoHelper.toClosePayload(this);
+    }
 
 }
