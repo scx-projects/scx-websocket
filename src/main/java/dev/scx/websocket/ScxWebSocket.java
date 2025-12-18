@@ -58,7 +58,7 @@ public interface ScxWebSocket extends AutoCloseable {
     }
 
     default ScxWebSocket sendClose(int code, String reason) {
-        return sendClose(ScxWebSocketCloseInfo.of(code,reason));
+        return sendClose(ScxWebSocketCloseInfo.of(code, reason));
     }
 
     default ScxWebSocket sendClose() {
