@@ -7,9 +7,10 @@ import dev.scx.http.headers.ScxHttpHeaders;
 import dev.scx.http.headers.cookie.Cookie;
 import dev.scx.http.media.MediaWriter;
 import dev.scx.http.method.ScxHttpMethod;
-import dev.scx.http.sender.HttpSendException;
 import dev.scx.http.sender.IllegalSenderStateException;
 import dev.scx.http.uri.ScxURI;
+import dev.scx.io.exception.AlreadyClosedException;
+import dev.scx.io.exception.ScxIOException;
 
 import static dev.scx.http.method.HttpMethod.GET;
 
@@ -83,7 +84,7 @@ public interface ScxClientWebSocketHandshakeRequest extends ScxHttpClientRequest
     }
 
     @Override
-    default ScxHttpClientResponse send(MediaWriter writer) throws IllegalSenderStateException, HttpSendException {
+    default ScxHttpClientResponse send(MediaWriter writer) throws IllegalSenderStateException, ScxIOException, AlreadyClosedException {
         throw new UnsupportedOperationException("Not supported Custom HttpBody.");
     }
 
