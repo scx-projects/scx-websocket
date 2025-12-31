@@ -3,7 +3,8 @@ package dev.scx.websocket;
 import dev.scx.io.exception.AlreadyClosedException;
 import dev.scx.io.exception.ScxIOException;
 import dev.scx.websocket.close_info.ScxWebSocketCloseInfo;
-import dev.scx.websocket.exception.WebSocketException;
+import dev.scx.websocket.exception.NoMoreWebSocketFrameException;
+import dev.scx.websocket.exception.WebSocketParseException;
 import dev.scx.websocket.exception.WebsocketAlreadySentCloseException;
 
 import static dev.scx.websocket.WebSocketOpCode.*;
@@ -15,7 +16,7 @@ import static dev.scx.websocket.close_info.WebSocketCloseInfo.NORMAL_CLOSE;
 /// @version 0.0.1
 public interface ScxWebSocket {
 
-    WebSocketFrame readFrame() throws WebSocketException;
+    WebSocketFrame readFrame() throws WebSocketParseException, NoMoreWebSocketFrameException, ScxIOException, AlreadyClosedException;
 
     ScxWebSocket sendFrame(WebSocketFrame frame) throws WebsocketAlreadySentCloseException, ScxIOException, AlreadyClosedException;
 
