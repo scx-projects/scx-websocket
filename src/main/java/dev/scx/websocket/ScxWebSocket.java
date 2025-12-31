@@ -1,7 +1,10 @@
 package dev.scx.websocket;
 
+import dev.scx.io.exception.AlreadyClosedException;
+import dev.scx.io.exception.ScxIOException;
 import dev.scx.websocket.close_info.ScxWebSocketCloseInfo;
 import dev.scx.websocket.exception.WebSocketException;
+import dev.scx.websocket.exception.WebsocketAlreadySentCloseException;
 
 import static dev.scx.websocket.WebSocketOpCode.*;
 import static dev.scx.websocket.close_info.WebSocketCloseInfo.NORMAL_CLOSE;
@@ -10,58 +13,55 @@ import static dev.scx.websocket.close_info.WebSocketCloseInfo.NORMAL_CLOSE;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface ScxWebSocket extends AutoCloseable {
+public interface ScxWebSocket {
 
     WebSocketFrame readFrame() throws WebSocketException;
 
-    ScxWebSocket sendFrame(WebSocketFrame frame);
+    ScxWebSocket sendFrame(WebSocketFrame frame) throws WebsocketAlreadySentCloseException, ScxIOException, AlreadyClosedException;
 
-    /// 直接 终止连接
-    @Override
-    void close();
+    /// 是否已经发送了 close 帧
+    boolean closeSent();
 
-    boolean isClosed();
-
-    default ScxWebSocket send(String textMessage, boolean last) {
+    default ScxWebSocket send(String textMessage, boolean last) throws WebsocketAlreadySentCloseException, ScxIOException, AlreadyClosedException {
         var payload = textMessage != null ? textMessage.getBytes() : new byte[]{};
         var frame = WebSocketFrame.of(TEXT, payload, last);
         return sendFrame(frame);
     }
 
-    default ScxWebSocket send(byte[] binaryMessage, boolean last) {
+    default ScxWebSocket send(byte[] binaryMessage, boolean last) throws WebsocketAlreadySentCloseException, ScxIOException, AlreadyClosedException {
         var frame = WebSocketFrame.of(BINARY, binaryMessage, last);
         return sendFrame(frame);
     }
 
-    default ScxWebSocket send(String textMessage) {
+    default ScxWebSocket send(String textMessage) throws WebsocketAlreadySentCloseException, ScxIOException, AlreadyClosedException {
         return send(textMessage, true);
     }
 
-    default ScxWebSocket send(byte[] binaryMessage) {
+    default ScxWebSocket send(byte[] binaryMessage) throws WebsocketAlreadySentCloseException, ScxIOException, AlreadyClosedException {
         return send(binaryMessage, true);
     }
 
-    default ScxWebSocket sendPing(byte[] data) {
+    default ScxWebSocket sendPing(byte[] data) throws WebsocketAlreadySentCloseException, ScxIOException, AlreadyClosedException {
         var frame = WebSocketFrame.of(PING, data);
         return sendFrame(frame);
     }
 
-    default ScxWebSocket sendPong(byte[] data) {
+    default ScxWebSocket sendPong(byte[] data) throws WebsocketAlreadySentCloseException, ScxIOException, AlreadyClosedException {
         var frame = WebSocketFrame.of(PONG, data);
         return sendFrame(frame);
     }
 
-    default ScxWebSocket sendClose(ScxWebSocketCloseInfo closeInfo) {
+    default ScxWebSocket sendClose(ScxWebSocketCloseInfo closeInfo) throws WebsocketAlreadySentCloseException, ScxIOException, AlreadyClosedException {
         var closePayload = closeInfo.toPayload();
         var frame = WebSocketFrame.of(CLOSE, closePayload);
         return sendFrame(frame);
     }
 
-    default ScxWebSocket sendClose(int code, String reason) {
+    default ScxWebSocket sendClose(int code, String reason) throws WebsocketAlreadySentCloseException, ScxIOException, AlreadyClosedException {
         return sendClose(ScxWebSocketCloseInfo.of(code, reason));
     }
 
-    default ScxWebSocket sendClose() {
+    default ScxWebSocket sendClose() throws WebsocketAlreadySentCloseException, ScxIOException, AlreadyClosedException {
         return sendClose(NORMAL_CLOSE);
     }
 
