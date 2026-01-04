@@ -14,7 +14,7 @@ import static dev.scx.websocket.close_info.WebSocketCloseInfo.NORMAL_CLOSE;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface ScxWebSocket {
+public interface ScxWebSocket extends AutoCloseable {
 
     WebSocketFrame readFrame() throws WebSocketParseException, NoMoreWebSocketFrameException, ScxIOException, AlreadyClosedException;
 
@@ -22,6 +22,13 @@ public interface ScxWebSocket {
 
     /// 是否已经发送了 close 帧
     boolean closeSent();
+
+    /// 关闭 "底层连接"
+    @Override
+    void close();
+
+    /// 是否已经关闭 "底层连接"
+    boolean isClosed();
 
     default ScxWebSocket send(String textMessage, boolean last) throws WebsocketAlreadySentCloseException, ScxIOException, AlreadyClosedException {
         var payload = textMessage != null ? textMessage.getBytes() : new byte[]{};
