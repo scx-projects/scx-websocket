@@ -4,7 +4,7 @@ package dev.scx.websocket.close_info;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface ScxWebSocketCloseInfo {
+public sealed interface ScxWebSocketCloseInfo permits ScxWebSocketCloseInfoImpl, WebSocketCloseInfo {
 
     static ScxWebSocketCloseInfo of(int code, String reason) {
         return new ScxWebSocketCloseInfoImpl(code, reason);
