@@ -25,7 +25,7 @@ public interface ScxWebSocket extends AutoCloseable {
 
     /// 关闭 "底层连接"
     @Override
-    void close();
+    void close() throws ScxIOException;
 
     /// 是否已经关闭 "底层连接"
     boolean isClosed();
