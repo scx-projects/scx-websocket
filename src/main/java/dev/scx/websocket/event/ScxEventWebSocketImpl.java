@@ -1,8 +1,12 @@
 package dev.scx.websocket.event;
 
+import dev.scx.io.exception.AlreadyClosedException;
+import dev.scx.io.exception.ScxIOException;
 import dev.scx.websocket.ScxWebSocket;
 import dev.scx.websocket.WebSocketFrame;
-import dev.scx.websocket.exception.WebSocketException;
+import dev.scx.websocket.exception.NoMoreWebSocketFrameException;
+import dev.scx.websocket.exception.WebSocketParseException;
+import dev.scx.websocket.exception.WebsocketAlreadySentCloseException;
 
 import java.lang.System.Logger;
 import java.util.concurrent.Executor;
@@ -48,17 +52,22 @@ class ScxEventWebSocketImpl implements ScxEventWebSocket {
     }
 
     @Override
-    public WebSocketFrame readFrame() throws WebSocketException {
+    public WebSocketFrame readFrame() throws WebSocketParseException, NoMoreWebSocketFrameException, ScxIOException, AlreadyClosedException {
         return ws.readFrame();
     }
 
     @Override
-    public ScxWebSocket sendFrame(WebSocketFrame frame) {
+    public ScxWebSocket sendFrame(WebSocketFrame frame) throws WebsocketAlreadySentCloseException, ScxIOException, AlreadyClosedException {
         return ws.sendFrame(frame);
     }
 
     @Override
-    public void close() {
+    public boolean closeSent() {
+        return ws.closeSent();
+    }
+
+    @Override
+    public void close() throws ScxIOException {
         ws.close();
     }
 
@@ -115,7 +124,7 @@ class ScxEventWebSocketImpl implements ScxEventWebSocket {
                 var frame = readFrame();
                 //处理帧
                 handleFrame(frame);
-            } catch (WebSocketException e) {
+            } catch (WebSocketParseException e) {
                 _handleCloseByException(NORMAL_CLOSE.code(), NORMAL_CLOSE.reason(), e.closeCode(), e.getMessage());
             } catch (Exception e) {
                 _handleError(e);
@@ -129,7 +138,7 @@ class ScxEventWebSocketImpl implements ScxEventWebSocket {
         this.running = false;
     }
 
-    private void handleFrame(WebSocketFrame frame) {
+    private void handleFrame(WebSocketFrame frame) throws WebSocketParseException {
         switch (frame.opCode()) {
             case CONTINUATION -> _handleContinuation(frame);
             case TEXT -> _handleText(frame);
@@ -140,7 +149,7 @@ class ScxEventWebSocketImpl implements ScxEventWebSocket {
         }
     }
 
-    private void _handleContinuation(WebSocketFrame frame) {
+    private void _handleContinuation(WebSocketFrame frame) throws WebSocketParseException {
         boolean finalFrame = frame.fin();
         var ct = continuationType;
         if (finalFrame) {
@@ -162,7 +171,7 @@ class ScxEventWebSocketImpl implements ScxEventWebSocket {
                 }
             }
             default -> {
-                throw new WebSocketException(PROTOCOL_ERROR.code(), "Unexpected continuation received");
+                throw new WebSocketParseException(PROTOCOL_ERROR.code(), "Unexpected continuation received");
             }
         }
     }
