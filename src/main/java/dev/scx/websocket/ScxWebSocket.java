@@ -27,12 +27,12 @@ public interface ScxWebSocket extends AutoCloseable {
 
     /// 关闭 "底层连接"
     @Override
-    void close() ;
+    void close();
 
     /// 是否已经关闭 "底层连接"
     boolean isClosed();
 
-    default ScxWebSocket send(String textMessage, boolean last) throws WebsocketAlreadySentCloseException, ScxOutputException, OutputAlreadyClosedException{
+    default ScxWebSocket send(String textMessage, boolean last) throws WebsocketAlreadySentCloseException, ScxOutputException, OutputAlreadyClosedException {
         var payload = textMessage != null ? textMessage.getBytes() : new byte[]{};
         var frame = WebSocketFrame.of(TEXT, payload, last);
         return sendFrame(frame);

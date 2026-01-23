@@ -1,11 +1,14 @@
 package dev.scx.websocket.exception;
 
 // todo 这个类 不合理
+
 /// WebSocket 异常
 ///
 /// @author scx567888
 /// @version 0.0.1
 public class WebSocketParseException extends Exception {
+
+    private int closeCode;
 
     public WebSocketParseException(String message) {
         super(message);
@@ -18,8 +21,6 @@ public class WebSocketParseException extends Exception {
     public WebSocketParseException(String message, Throwable cause) {
         super(message, cause);
     }
-
-    private int closeCode;
 
     public WebSocketParseException(int closeCode, String message) {
         super(message);
