@@ -6,7 +6,6 @@ import dev.scx.http.ScxHttpClientResponse;
 import dev.scx.http.headers.ScxHttpHeaderName;
 import dev.scx.http.headers.ScxHttpHeaders;
 import dev.scx.http.headers.cookie.Cookie;
-import dev.scx.http.media.MediaWriter;
 import dev.scx.http.method.ScxHttpMethod;
 import dev.scx.http.sender.IllegalSenderStateException;
 import dev.scx.http.sender.ScxHttpReceiveException;
