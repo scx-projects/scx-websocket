@@ -1,7 +1,9 @@
 package dev.scx.websocket.event;
 
-import dev.scx.io.exception.AlreadyClosedException;
-import dev.scx.io.exception.ScxIOException;
+import dev.scx.io.exception.InputAlreadyClosedException;
+import dev.scx.io.exception.OutputAlreadyClosedException;
+import dev.scx.io.exception.ScxInputException;
+import dev.scx.io.exception.ScxOutputException;
 import dev.scx.websocket.ScxWebSocket;
 import dev.scx.websocket.WebSocketFrame;
 import dev.scx.websocket.exception.NoMoreWebSocketFrameException;
@@ -52,12 +54,12 @@ class ScxEventWebSocketImpl implements ScxEventWebSocket {
     }
 
     @Override
-    public WebSocketFrame readFrame() throws WebSocketParseException, NoMoreWebSocketFrameException, ScxIOException, AlreadyClosedException {
+    public WebSocketFrame readFrame() throws WebSocketParseException, NoMoreWebSocketFrameException, ScxInputException, InputAlreadyClosedException {
         return ws.readFrame();
     }
 
     @Override
-    public ScxWebSocket sendFrame(WebSocketFrame frame) throws WebsocketAlreadySentCloseException, ScxIOException, AlreadyClosedException {
+    public ScxWebSocket sendFrame(WebSocketFrame frame) throws WebsocketAlreadySentCloseException, ScxOutputException, OutputAlreadyClosedException {
         return ws.sendFrame(frame);
     }
 
@@ -67,7 +69,7 @@ class ScxEventWebSocketImpl implements ScxEventWebSocket {
     }
 
     @Override
-    public void close() throws ScxIOException {
+    public void close()  {
         ws.close();
     }
 
