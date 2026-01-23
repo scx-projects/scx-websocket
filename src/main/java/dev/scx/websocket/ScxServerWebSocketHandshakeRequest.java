@@ -5,7 +5,6 @@ import dev.scx.http.ScxHttpServerRequest;
 import static dev.scx.http.headers.HttpHeaderName.SEC_WEBSOCKET_KEY;
 import static dev.scx.http.headers.HttpHeaderName.SEC_WEBSOCKET_VERSION;
 
-
 /// ScxServerWebSocketHandshakeRequest
 ///
 /// @author scx567888
