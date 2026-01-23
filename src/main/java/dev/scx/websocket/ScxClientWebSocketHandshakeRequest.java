@@ -92,7 +92,7 @@ public interface ScxClientWebSocketHandshakeRequest extends ScxHttpClientRequest
     }
 
     @Override
-    default ScxHttpClientResponse send(MediaWriter writer) {
+    default ScxHttpClientResponse send(BodyWriter writer) {
         throw new UnsupportedOperationException("Not supported Custom HttpBody.");
     }
 
