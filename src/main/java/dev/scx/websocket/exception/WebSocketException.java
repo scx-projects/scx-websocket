@@ -1,6 +1,7 @@
 package dev.scx.websocket.exception;
 
 // todo 这个类待细化.
+
 /// WebSocketException
 ///
 /// @author scx567888

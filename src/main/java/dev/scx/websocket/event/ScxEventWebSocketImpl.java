@@ -13,6 +13,7 @@ import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.getLogger;
 
 // todo 这个类 待重构.
+
 /// ScxEventWebSocket 默认实现
 ///
 /// @author scx567888
@@ -159,7 +160,7 @@ class ScxEventWebSocketImpl implements ScxEventWebSocket {
                 }
             }
             default -> {
-                throw new WebSocketException(PROTOCOL_ERROR.code()+ "Unexpected continuation received");
+                throw new WebSocketException(PROTOCOL_ERROR.code() + "Unexpected continuation received");
             }
         }
     }
