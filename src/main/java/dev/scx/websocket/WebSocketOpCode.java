@@ -1,7 +1,5 @@
 package dev.scx.websocket;
 
-import dev.scx.http.sender.IllegalSenderStateException;
-
 /// WebSocket 操作码
 ///
 /// @author scx567888
@@ -34,7 +32,7 @@ public enum WebSocketOpCode {
 
     /// @param code code
     /// @return 未找到时 抛出异常
-    public static WebSocketOpCode of(int code) throws IllegalSenderStateException {
+    public static WebSocketOpCode of(int code) throws IllegalArgumentException {
         var c = find(code);
         if (c == null) {
             throw new IllegalArgumentException("Invalid WebSocket OpCode: " + code);
