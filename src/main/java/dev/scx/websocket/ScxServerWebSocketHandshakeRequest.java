@@ -22,8 +22,8 @@ public interface ScxServerWebSocketHandshakeRequest extends ScxHttpServerRequest
         return getHeader(SEC_WEBSOCKET_VERSION);
     }
 
-    default ScxWebSocket webSocket() {
-        return response().webSocket();
+    default ScxWebSocket upgrade() {
+        return response().upgrade();
     }
 
 }
