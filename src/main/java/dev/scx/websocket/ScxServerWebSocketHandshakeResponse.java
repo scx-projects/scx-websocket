@@ -17,7 +17,7 @@ public interface ScxServerWebSocketHandshakeResponse extends ScxHttpServerRespon
 
     /// 执行 WebSocket 协议升级.
     ///
-    /// - 首次调用: 提交 101 Switching Protocols, 完成升级, 创建并缓存 WebSocket 会话并返回/
+    /// - 首次调用: 提交 101 Switching Protocols, 完成升级, 创建并缓存 WebSocket 会话并返回
     /// - 再次调用: 不再产生任何 IO, 直接返回同一 WebSocket 实例.
     /// - 与普通 HTTP send(...) 提交互斥.
     ScxWebSocket upgrade() throws IllegalSenderStateException, ScxHttpSendException, ScxWrappedException, ScxHttpReceiveException;
