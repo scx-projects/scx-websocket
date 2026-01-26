@@ -25,12 +25,12 @@ public interface ScxClientWebSocketHandshakeRequest extends ScxHttpClientRequest
 
     /// 发送握手请求
     /// 能力可以看作 send, 但因为 WebSocket 握手请求不允许发送请求体,
-    /// 我们在此处使用 sendHandshake 来代替 send 保证规范性.
-    ScxClientWebSocketHandshakeResponse sendHandshake() throws IllegalSenderStateException, ScxHttpSendException, ScxWrappedException, ScxHttpReceiveException;
+    /// 我们在此处使用 handshake 来代替 send 保证规范性.
+    ScxClientWebSocketHandshakeResponse handshake() throws IllegalSenderStateException, ScxHttpSendException, ScxWrappedException, ScxHttpReceiveException;
 
     /// 发送握手然后等待远端接受握手并返回 websocket 对象
-    default ScxWebSocket webSocket() throws IllegalSenderStateException, ScxHttpSendException, ScxWrappedException, ScxHttpReceiveException {
-        return sendHandshake().webSocket();
+    default ScxWebSocket upgrade() throws IllegalSenderStateException, ScxHttpSendException, ScxWrappedException, ScxHttpReceiveException, ScxClientWebSocketHandshakeRejectedException {
+        return handshake().upgrade();
     }
 
     // ************ 重写返回值 以便链式调用 ****************
@@ -55,7 +55,7 @@ public interface ScxClientWebSocketHandshakeRequest extends ScxHttpClientRequest
 
     @Override
     default ScxClientWebSocketHandshakeRequest addHeader(ScxHttpHeaderName headerName, String... values) {
-        return (ScxClientWebSocketHandshakeRequest) ScxHttpClientRequest.super.setHeader(headerName, values);
+        return (ScxClientWebSocketHandshakeRequest) ScxHttpClientRequest.super.addHeader(headerName, values);
     }
 
     @Override

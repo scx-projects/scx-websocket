@@ -1,6 +1,10 @@
 package dev.scx.websocket;
 
+import dev.scx.exception.ScxWrappedException;
 import dev.scx.http.ScxHttpServerRequest;
+import dev.scx.http.sender.IllegalSenderStateException;
+import dev.scx.http.sender.ScxHttpReceiveException;
+import dev.scx.http.sender.ScxHttpSendException;
 
 import static dev.scx.http.headers.HttpHeaderName.SEC_WEBSOCKET_KEY;
 import static dev.scx.http.headers.HttpHeaderName.SEC_WEBSOCKET_VERSION;
@@ -22,7 +26,7 @@ public interface ScxServerWebSocketHandshakeRequest extends ScxHttpServerRequest
         return getHeader(SEC_WEBSOCKET_VERSION);
     }
 
-    default ScxWebSocket upgrade() {
+    default ScxWebSocket upgrade() throws IllegalSenderStateException, ScxHttpSendException, ScxWrappedException, ScxHttpReceiveException {
         return response().upgrade();
     }
 
