@@ -1,4 +1,4 @@
-package dev.scx.websocket;
+package dev.scx.websocket.handshake;
 
 /// ScxClientWebSocketHandshakeRejectedException
 ///

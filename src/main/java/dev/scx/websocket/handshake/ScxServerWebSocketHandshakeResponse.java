@@ -1,10 +1,11 @@
-package dev.scx.websocket;
+package dev.scx.websocket.handshake;
 
 import dev.scx.exception.ScxWrappedException;
 import dev.scx.http.ScxHttpServerResponse;
 import dev.scx.http.sender.IllegalSenderStateException;
 import dev.scx.http.sender.ScxHttpReceiveException;
 import dev.scx.http.sender.ScxHttpSendException;
+import dev.scx.websocket.ScxWebSocket;
 
 /// ScxServerWebSocketHandshakeResponse
 ///

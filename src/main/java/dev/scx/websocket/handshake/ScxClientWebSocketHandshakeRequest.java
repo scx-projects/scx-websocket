@@ -1,4 +1,4 @@
-package dev.scx.websocket;
+package dev.scx.websocket.handshake;
 
 import dev.scx.exception.ScxWrappedException;
 import dev.scx.http.ScxHttpClientRequest;
@@ -11,6 +11,7 @@ import dev.scx.http.sender.IllegalSenderStateException;
 import dev.scx.http.sender.ScxHttpReceiveException;
 import dev.scx.http.sender.ScxHttpSendException;
 import dev.scx.http.uri.ScxURI;
+import dev.scx.websocket.ScxWebSocket;
 
 import static dev.scx.http.method.HttpMethod.GET;
 
