@@ -34,7 +34,7 @@ final class ScxWebSocketCloseInfoHelper {
         return ScxWebSocketCloseInfo.of(code, reason);
     }
 
-    public static byte[] toClosePayload(ScxWebSocketCloseInfo closeInfo) {
+    public static byte[] toClosePayload(ScxWebSocketCloseInfo closeInfo) throws IllegalArgumentException {
         var code = closeInfo.code();
         var reason = closeInfo.reason();
 
