@@ -8,6 +8,9 @@ package dev.scx.websocket.exception;
 /// @version 0.0.1
 public class WebSocketException extends Exception {
 
+    public WebSocketException() {
+    }
+
     public WebSocketException(String message) {
         super(message);
     }

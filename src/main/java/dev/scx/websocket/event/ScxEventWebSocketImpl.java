@@ -117,7 +117,7 @@ class ScxEventWebSocketImpl implements ScxEventWebSocket {
                 _handleCloseByException(NORMAL_CLOSE.code(), NORMAL_CLOSE.reason(), 1001, e.getMessage());
             } catch (Exception e) {
                 _handleError(e);
-                _handleCloseByException(CLOSED_ABNORMALLY.code(), CLOSED_ABNORMALLY.reason(), UNEXPECTED_CONDITION.code(), e.getMessage());
+//                _handleCloseByException(CLOSED_ABNORMALLY.code(), CLOSED_ABNORMALLY.reason(), UNEXPECTED_CONDITION.code(), e.getMessage());
             }
         }
     }
@@ -200,8 +200,8 @@ class ScxEventWebSocketImpl implements ScxEventWebSocket {
     }
 
     private void _handleClose(WebSocketFrame frame) {
-        var closeInfo = frame.getCloseInfo();
-        _handleCloseByFrame(closeInfo.code(), closeInfo.reason(), NORMAL_CLOSE.code(), NORMAL_CLOSE.reason());
+//        var closeInfo = frame.getCloseInfo();
+//        _handleCloseByFrame(closeInfo.code(), closeInfo.reason(), NORMAL_CLOSE.code(), NORMAL_CLOSE.reason());
     }
 
     public void _handleCloseByFrame(int code, String reason, int peerCode, String peerReason) {
