@@ -36,23 +36,15 @@ public interface ScxWebSocket extends AutoCloseable {
     @Override
     void close();
 
-    default void send(String textMessage, boolean last) throws WebSocketException {
-        var payload = textMessage.getBytes(UTF_8);
-        var frame = WebSocketFrame.of(TEXT, payload, last);
-        sendFrame(frame);
-    }
-
-    default void send(byte[] binaryMessage, boolean last) throws WebSocketException {
-        var frame = WebSocketFrame.of(BINARY, binaryMessage, last);
-        sendFrame(frame);
-    }
-
     default void send(String textMessage) throws WebSocketException {
-        send(textMessage, true);
+        var payload = textMessage.getBytes(UTF_8);
+        var frame = WebSocketFrame.of(TEXT, payload);
+        sendFrame(frame);
     }
 
     default void send(byte[] binaryMessage) throws WebSocketException {
-        send(binaryMessage, true);
+        var frame = WebSocketFrame.of(BINARY, binaryMessage);
+        sendFrame(frame);
     }
 
     default void sendPing(byte[] data) throws WebSocketException {
@@ -63,6 +55,14 @@ public interface ScxWebSocket extends AutoCloseable {
     default void sendPong(byte[] data) throws WebSocketException {
         var frame = WebSocketFrame.of(PONG, data);
         sendFrame(frame);
+    }
+
+    default void sendPing() throws WebSocketException {
+        sendPing(new byte[0]);
+    }
+
+    default void sendPong() throws WebSocketException {
+        sendPong(new byte[0]);
     }
 
     default void sendClose(ScxWebSocketCloseInfo closeInfo) throws WebSocketException {
