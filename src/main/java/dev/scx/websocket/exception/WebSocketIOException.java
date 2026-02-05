@@ -9,10 +9,13 @@ import dev.scx.io.exception.*;
 /// - 网络或传输错误 [ScxInputException]/[ScxOutputException]
 ///
 /// 出现该异常后, 连接生命周期结束, 调用 close() 释放资源是安全且幂等的.
+///
+/// @author scx567888
+/// @version 0.0.1
 public class WebSocketIOException extends WebSocketException {
 
-    public WebSocketIOException(String message) {
-        super(message);
+    public WebSocketIOException(Throwable cause) {
+        super(cause);
     }
 
 }
