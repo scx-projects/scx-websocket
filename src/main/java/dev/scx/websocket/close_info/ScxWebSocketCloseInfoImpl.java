@@ -4,6 +4,6 @@ package dev.scx.websocket.close_info;
 ///
 /// @author scx567888
 /// @version 0.0.1
-record ScxWebSocketCloseInfoImpl(int code, String reason) implements ScxWebSocketCloseInfo {
+record ScxWebSocketCloseInfoImpl(Integer code, String reason) implements ScxWebSocketCloseInfo {
 
 }
