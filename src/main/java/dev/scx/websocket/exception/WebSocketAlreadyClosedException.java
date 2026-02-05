@@ -1,9 +1,15 @@
 package dev.scx.websocket.exception;
 
-public class WebSocketAlreadyClosedException extends WebSocketException {
+/// WebSocketAlreadyClosedException.
+///
+/// WebSocket 已被关闭异常.
+///
+/// @author scx567888
+/// @version 0.0.1
+public final class WebSocketAlreadyClosedException extends WebSocketException {
 
-    public WebSocketAlreadyClosedException(String message) {
-        super(message);
+    public WebSocketAlreadyClosedException() {
+        super();
     }
 
 }
