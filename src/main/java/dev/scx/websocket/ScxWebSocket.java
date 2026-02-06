@@ -1,7 +1,9 @@
 package dev.scx.websocket;
 
 import dev.scx.websocket.close_info.ScxWebSocketCloseInfo;
-import dev.scx.websocket.exception.WebSocketException;
+import dev.scx.websocket.exception.WebSocketAlreadyClosedException;
+import dev.scx.websocket.exception.WebSocketIOException;
+import dev.scx.websocket.exception.WebSocketProtocolException;
 
 import static dev.scx.websocket.WebSocketOpCode.*;
 import static dev.scx.websocket.close_info.WebSocketCloseInfo.NORMAL_CLOSE;
@@ -13,9 +15,9 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 /// @version 0.0.1
 public interface ScxWebSocket extends AutoCloseable {
 
-    WebSocketFrame readFrame() throws WebSocketException;
+    WebSocketFrame readFrame() throws WebSocketProtocolException, WebSocketIOException, WebSocketAlreadyClosedException;
 
-    void sendFrame(WebSocketFrame frame) throws WebSocketException;
+    void sendFrame(WebSocketFrame frame) throws WebSocketProtocolException, WebSocketIOException, WebSocketAlreadyClosedException;
 
     /// 立即关闭底层连接并释放相关资源.
     ///
@@ -36,46 +38,46 @@ public interface ScxWebSocket extends AutoCloseable {
     @Override
     void close();
 
-    default void send(String textMessage) throws WebSocketException {
+    default void send(String textMessage) throws WebSocketProtocolException, WebSocketIOException, WebSocketAlreadyClosedException {
         var payload = textMessage.getBytes(UTF_8);
         var frame = WebSocketFrame.of(TEXT, payload);
         sendFrame(frame);
     }
 
-    default void send(byte[] binaryMessage) throws WebSocketException {
+    default void send(byte[] binaryMessage) throws WebSocketProtocolException, WebSocketIOException, WebSocketAlreadyClosedException {
         var frame = WebSocketFrame.of(BINARY, binaryMessage);
         sendFrame(frame);
     }
 
-    default void sendPing(byte[] data) throws WebSocketException {
+    default void sendPing(byte[] data) throws WebSocketProtocolException, WebSocketIOException, WebSocketAlreadyClosedException {
         var frame = WebSocketFrame.of(PING, data);
         sendFrame(frame);
     }
 
-    default void sendPong(byte[] data) throws WebSocketException {
+    default void sendPong(byte[] data) throws WebSocketProtocolException, WebSocketIOException, WebSocketAlreadyClosedException {
         var frame = WebSocketFrame.of(PONG, data);
         sendFrame(frame);
     }
 
-    default void sendPing() throws WebSocketException {
+    default void sendPing() throws WebSocketProtocolException, WebSocketIOException, WebSocketAlreadyClosedException {
         sendPing(new byte[0]);
     }
 
-    default void sendPong() throws WebSocketException {
+    default void sendPong() throws WebSocketProtocolException, WebSocketIOException, WebSocketAlreadyClosedException {
         sendPong(new byte[0]);
     }
 
-    default void sendClose(ScxWebSocketCloseInfo closeInfo) throws WebSocketException {
+    default void sendClose(ScxWebSocketCloseInfo closeInfo) throws WebSocketProtocolException, WebSocketIOException, WebSocketAlreadyClosedException {
         var closePayload = closeInfo.toPayload();
         var frame = WebSocketFrame.of(CLOSE, closePayload);
         sendFrame(frame);
     }
 
-    default void sendClose(int code, String reason) throws WebSocketException {
+    default void sendClose(int code, String reason) throws WebSocketProtocolException, WebSocketIOException, WebSocketAlreadyClosedException {
         sendClose(ScxWebSocketCloseInfo.of(code, reason));
     }
 
-    default void sendClose() throws WebSocketException {
+    default void sendClose() throws WebSocketProtocolException, WebSocketIOException, WebSocketAlreadyClosedException {
         sendClose(NORMAL_CLOSE);
     }
 

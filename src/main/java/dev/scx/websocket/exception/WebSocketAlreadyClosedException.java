@@ -6,6 +6,6 @@ package dev.scx.websocket.exception;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class WebSocketAlreadyClosedException extends RuntimeException {
+public final class WebSocketAlreadyClosedException extends Exception {
 
 }

@@ -6,7 +6,7 @@ import dev.scx.websocket.close_info.ScxWebSocketCloseInfo;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class WebSocketProtocolException extends RuntimeException {
+public class WebSocketProtocolException extends Exception {
 
     private final ScxWebSocketCloseInfo closeInfo;
 
