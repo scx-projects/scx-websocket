@@ -11,7 +11,7 @@ import dev.scx.http.sender.IllegalSenderStateException;
 import dev.scx.http.sender.ScxHttpReceiveException;
 import dev.scx.http.sender.ScxHttpSendException;
 import dev.scx.http.uri.ScxURI;
-import dev.scx.websocket.ScxWebSocket;
+import dev.scx.websocket.ScxFrameWebSocket;
 
 import static dev.scx.http.method.HttpMethod.GET;
 
@@ -30,7 +30,7 @@ public interface ScxClientWebSocketHandshakeRequest extends ScxHttpClientRequest
     ScxClientWebSocketHandshakeResponse handshake() throws IllegalSenderStateException, ScxHttpSendException, ScxWrappedException, ScxHttpReceiveException;
 
     /// 发送握手然后等待远端接受握手并返回 websocket 对象
-    default ScxWebSocket upgrade() throws IllegalSenderStateException, ScxHttpSendException, ScxWrappedException, ScxHttpReceiveException, ScxClientWebSocketHandshakeRejectedException {
+    default ScxFrameWebSocket upgrade() throws IllegalSenderStateException, ScxHttpSendException, ScxWrappedException, ScxHttpReceiveException, ScxClientWebSocketHandshakeRejectedException {
         return handshake().upgrade();
     }
 

@@ -1,6 +1,6 @@
 package dev.scx.websocket.message;
 
-import dev.scx.websocket.ScxWebSocket;
+import dev.scx.websocket.ScxFrameWebSocket;
 import dev.scx.websocket.WebSocketFrame;
 import dev.scx.websocket.WebSocketOpCode;
 import dev.scx.websocket.close_info.WebSocketCloseInfo;
@@ -16,9 +16,9 @@ import static dev.scx.websocket.WebSocketOpCode.*;
 ///
 /// readFrame 会聚合 CONTINUATION.
 ///
-public final class ScxMessageWebSocket implements ScxWebSocket {
+public final class ScxMessageWebSocket implements ScxFrameWebSocket {
 
-    private final ScxWebSocket scxWebSocket;
+    private final ScxFrameWebSocket scxWebSocket;
     private final int maxWebSocketMessageSize;
 
     // fragmentation state
@@ -27,11 +27,11 @@ public final class ScxMessageWebSocket implements ScxWebSocket {
     private final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
     private long bufferedSize = 0;
 
-    public ScxMessageWebSocket(ScxWebSocket scxWebSocket) {
+    public ScxMessageWebSocket(ScxFrameWebSocket scxWebSocket) {
         this(scxWebSocket, 1024 * 1024 * 16);// 默认 16 MB
     }
 
-    public ScxMessageWebSocket(ScxWebSocket scxWebSocket, int maxWebSocketMessageSize) {
+    public ScxMessageWebSocket(ScxFrameWebSocket scxWebSocket, int maxWebSocketMessageSize) {
         this.scxWebSocket = scxWebSocket;
         this.maxWebSocketMessageSize = maxWebSocketMessageSize;
     }

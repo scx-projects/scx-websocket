@@ -1,6 +1,6 @@
 package dev.scx.websocket.event;
 
-import dev.scx.websocket.ScxWebSocket;
+import dev.scx.websocket.ScxFrameWebSocket;
 
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
@@ -9,14 +9,14 @@ import java.util.function.Consumer;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface ScxEventWebSocket extends ScxWebSocket {
+public interface ScxEventWebSocket extends ScxFrameWebSocket {
 
-    static ScxEventWebSocket of(ScxWebSocket scxWebSocket) {
+    static ScxEventWebSocket of(ScxFrameWebSocket scxWebSocket) {
         return new ScxEventWebSocketImpl(scxWebSocket);
     }
 
     /// 为了防止 回调之间互相阻塞 可以传递一个 callbackExecutor 来处理每个 callback
-    static ScxEventWebSocket of(ScxWebSocket scxWebSocket, Executor callbackExecutor) {
+    static ScxEventWebSocket of(ScxFrameWebSocket scxWebSocket, Executor callbackExecutor) {
         return new ScxEventWebSocketImpl(scxWebSocket, callbackExecutor);
     }
 

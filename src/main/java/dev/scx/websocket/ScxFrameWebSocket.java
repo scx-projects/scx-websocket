@@ -26,7 +26,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface ScxWebSocket extends AutoCloseable {
+public interface ScxFrameWebSocket extends AutoCloseable {
 
     WebSocketFrame readFrame() throws WebSocketIOException, WebSocketProtocolException;
 
