@@ -15,7 +15,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 /// ### Closing handshake 行为约定
 ///
 /// - 当 [#readFrame()] 读取到 `CLOSE` 帧时,
-///   若本端尚未发送过 `CLOSE` 帧，则必须尝试发送一个 `CLOSE` 帧作为响应.
+///   若本端尚未发送过 `CLOSE` 帧, 则必须尝试发送一个 `CLOSE` 帧作为响应.
 ///
 /// - 当通过 [#sendFrame(WebSocketFrame)] 成功发送 `CLOSE` 帧后，
 ///   连接将进入 closing 状态; 在该状态下禁止发送数据帧  (`TEXT`/`BINARY`/`CONTINUATION`).
