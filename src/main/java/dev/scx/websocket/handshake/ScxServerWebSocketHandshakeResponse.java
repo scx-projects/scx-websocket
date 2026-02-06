@@ -5,7 +5,7 @@ import dev.scx.http.ScxHttpServerResponse;
 import dev.scx.http.sender.IllegalSenderStateException;
 import dev.scx.http.sender.ScxHttpReceiveException;
 import dev.scx.http.sender.ScxHttpSendException;
-import dev.scx.websocket.ScxFrameWebSocket;
+import dev.scx.websocket.frame.ScxFrameWebSocket;
 
 /// ScxServerWebSocketHandshakeResponse
 ///

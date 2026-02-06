@@ -1,6 +1,6 @@
 package dev.scx.websocket.event;
 
-import dev.scx.websocket.ScxFrameWebSocket;
+import dev.scx.websocket.frame.ScxFrameWebSocket;
 
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;

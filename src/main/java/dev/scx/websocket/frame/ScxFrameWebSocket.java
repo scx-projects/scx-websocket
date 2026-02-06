@@ -1,4 +1,4 @@
-package dev.scx.websocket;
+package dev.scx.websocket.frame;
 
 import dev.scx.websocket.close_info.ScxWebSocketCloseInfo;
 import dev.scx.websocket.exception.WebSocketIOException;

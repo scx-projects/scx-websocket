@@ -1,7 +1,7 @@
 package dev.scx.websocket.event;
 
-import dev.scx.websocket.ScxFrameWebSocket;
-import dev.scx.websocket.WebSocketFrame;
+import dev.scx.websocket.frame.ScxFrameWebSocket;
+import dev.scx.websocket.frame.WebSocketFrame;
 import dev.scx.websocket.exception.WebSocketIOException;
 import dev.scx.websocket.exception.WebSocketInvalidStateException;
 import dev.scx.websocket.exception.WebSocketProtocolException;

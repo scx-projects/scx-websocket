@@ -1,7 +1,7 @@
 package dev.scx.websocket.handshake;
 
 import dev.scx.http.ScxHttpClientResponse;
-import dev.scx.websocket.ScxFrameWebSocket;
+import dev.scx.websocket.frame.ScxFrameWebSocket;
 
 /// ScxClientWebSocketHandshakeResponse
 ///

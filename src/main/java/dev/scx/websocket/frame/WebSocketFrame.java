@@ -1,6 +1,8 @@
-package dev.scx.websocket;
+package dev.scx.websocket.frame;
 
-import static dev.scx.websocket.WebSocketFrameHelper.checkFrame;
+import dev.scx.websocket.WebSocketOpCode;
+
+import static dev.scx.websocket.frame.WebSocketFrameHelper.checkFrame;
 
 /// WebSocketFrame
 ///
