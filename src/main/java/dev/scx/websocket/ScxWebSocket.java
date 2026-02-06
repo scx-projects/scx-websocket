@@ -9,7 +9,20 @@ import static dev.scx.websocket.WebSocketOpCode.*;
 import static dev.scx.websocket.close_info.WebSocketCloseInfo.NORMAL_CLOSE;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-/// ScxWebSocket
+/// ScxWebSocket 是一个帧级 (frame-level) 的 WebSocket 接口,
+/// 负责保证 WebSocket 协议中最基本的 closing handshake 行为.
+///
+/// ### Closing handshake 行为约定
+///
+/// - 当 [#readFrame()] 读取到 `CLOSE` 帧时,
+///   若本端尚未发送过 `CLOSE` 帧，则必须尝试发送一个 `CLOSE` 帧作为响应.
+///
+/// - 当通过 [#sendFrame(WebSocketFrame)] 成功发送 `CLOSE` 帧后，
+///   连接将进入 closing 状态; 在该状态下禁止发送数据帧  (`TEXT`/`BINARY`/`CONTINUATION`).
+///
+/// 上述行为由 `ScxWebSocket` 的实现保证, 调用方无需显式处理 closing handshake 的细节.
+///
+/// 调用 [#close()] 表示一次资源级的终止 (abort), 不属于 WebSocket 协议层的 closing handshake.
 ///
 /// @author scx567888
 /// @version 0.0.1
