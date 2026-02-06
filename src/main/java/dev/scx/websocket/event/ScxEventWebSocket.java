@@ -1,6 +1,7 @@
 package dev.scx.websocket.event;
 
 import dev.scx.websocket.frame.ScxFrameWebSocket;
+import dev.scx.websocket.message.ScxMessageWebSocket;
 
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
@@ -9,7 +10,7 @@ import java.util.function.Consumer;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface ScxEventWebSocket extends ScxFrameWebSocket {
+public interface ScxEventWebSocket  {
 
     static ScxEventWebSocket of(ScxFrameWebSocket scxWebSocket) {
         return new ScxEventWebSocketImpl(scxWebSocket);
