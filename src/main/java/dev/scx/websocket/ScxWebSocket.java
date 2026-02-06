@@ -1,8 +1,8 @@
 package dev.scx.websocket;
 
 import dev.scx.websocket.close_info.ScxWebSocketCloseInfo;
-import dev.scx.websocket.exception.WebSocketAlreadyClosedException;
 import dev.scx.websocket.exception.WebSocketIOException;
+import dev.scx.websocket.exception.WebSocketInvalidStateException;
 import dev.scx.websocket.exception.WebSocketProtocolException;
 
 import static dev.scx.websocket.WebSocketOpCode.*;
@@ -15,9 +15,9 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 /// @version 0.0.1
 public interface ScxWebSocket extends AutoCloseable {
 
-    WebSocketFrame readFrame() throws WebSocketProtocolException, WebSocketIOException, WebSocketAlreadyClosedException;
+    WebSocketFrame readFrame() throws WebSocketIOException, WebSocketProtocolException;
 
-    void sendFrame(WebSocketFrame frame) throws WebSocketProtocolException, WebSocketIOException, WebSocketAlreadyClosedException;
+    void sendFrame(WebSocketFrame frame) throws WebSocketIOException, WebSocketInvalidStateException;
 
     /// 立即关闭底层连接并释放相关资源.
     ///
@@ -25,12 +25,11 @@ public interface ScxWebSocket extends AutoCloseable {
     ///
     /// - 不发送任何 WebSocket 帧（包括 CLOSE 帧)
     /// - 不等待对端响应, 也不保证完成 WebSocket closing handshake
-    /// - 不抛出受检异常
-    /// - 多次调用是幂等的
+    /// - 不抛出受检异常.
+    /// - 多次调用是幂等的.
     ///
     /// 调用此方法后, 底层连接将被视为已终止,
-    /// 后续对 [#readFrame()] 或 [#sendFrame(WebSocketFrame)] 的调用
-    /// 将抛出 [WebSocketException].
+    /// 后续对 [#readFrame()] 或 [#sendFrame(WebSocketFrame)] 的调用, 将抛出 [WebSocketIOException].
     ///
     /// 若需要按照 WebSocket 协议进行优雅关闭,
     /// 应先调用 [#sendClose(ScxWebSocketCloseInfo)] 发送 CLOSE 帧,
@@ -38,46 +37,46 @@ public interface ScxWebSocket extends AutoCloseable {
     @Override
     void close();
 
-    default void send(String textMessage) throws WebSocketProtocolException, WebSocketIOException, WebSocketAlreadyClosedException {
+    default void send(String textMessage) throws WebSocketIOException, WebSocketInvalidStateException {
         var payload = textMessage.getBytes(UTF_8);
-        var frame = WebSocketFrame.of(TEXT, payload);
+        var frame = WebSocketFrame.of(TEXT, payload, true);
         sendFrame(frame);
     }
 
-    default void send(byte[] binaryMessage) throws WebSocketProtocolException, WebSocketIOException, WebSocketAlreadyClosedException {
-        var frame = WebSocketFrame.of(BINARY, binaryMessage);
+    default void send(byte[] binaryMessage) throws WebSocketIOException, WebSocketInvalidStateException {
+        var frame = WebSocketFrame.of(BINARY, binaryMessage, true);
         sendFrame(frame);
     }
 
-    default void sendPing(byte[] data) throws WebSocketProtocolException, WebSocketIOException, WebSocketAlreadyClosedException {
-        var frame = WebSocketFrame.of(PING, data);
+    default void sendPing(byte[] data) throws WebSocketIOException, WebSocketInvalidStateException {
+        var frame = WebSocketFrame.of(PING, data, true);
         sendFrame(frame);
     }
 
-    default void sendPong(byte[] data) throws WebSocketProtocolException, WebSocketIOException, WebSocketAlreadyClosedException {
-        var frame = WebSocketFrame.of(PONG, data);
+    default void sendPong(byte[] data) throws WebSocketIOException, WebSocketInvalidStateException {
+        var frame = WebSocketFrame.of(PONG, data, true);
         sendFrame(frame);
     }
 
-    default void sendPing() throws WebSocketProtocolException, WebSocketIOException, WebSocketAlreadyClosedException {
+    default void sendPing() throws WebSocketIOException, WebSocketInvalidStateException {
         sendPing(new byte[0]);
     }
 
-    default void sendPong() throws WebSocketProtocolException, WebSocketIOException, WebSocketAlreadyClosedException {
+    default void sendPong() throws WebSocketIOException, WebSocketInvalidStateException {
         sendPong(new byte[0]);
     }
 
-    default void sendClose(ScxWebSocketCloseInfo closeInfo) throws WebSocketProtocolException, WebSocketIOException, WebSocketAlreadyClosedException {
+    default void sendClose(ScxWebSocketCloseInfo closeInfo) throws WebSocketIOException, WebSocketInvalidStateException {
         var closePayload = closeInfo.toPayload();
-        var frame = WebSocketFrame.of(CLOSE, closePayload);
+        var frame = WebSocketFrame.of(CLOSE, closePayload, true);
         sendFrame(frame);
     }
 
-    default void sendClose(int code, String reason) throws WebSocketProtocolException, WebSocketIOException, WebSocketAlreadyClosedException {
+    default void sendClose(int code, String reason) throws WebSocketIOException, WebSocketInvalidStateException {
         sendClose(ScxWebSocketCloseInfo.of(code, reason));
     }
 
-    default void sendClose() throws WebSocketProtocolException, WebSocketIOException, WebSocketAlreadyClosedException {
+    default void sendClose() throws WebSocketIOException, WebSocketInvalidStateException {
         sendClose(NORMAL_CLOSE);
     }
 

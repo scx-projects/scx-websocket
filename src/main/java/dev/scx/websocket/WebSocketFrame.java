@@ -23,11 +23,6 @@ public final class WebSocketFrame {
         return new WebSocketFrame(opCode, payloadData, fin);
     }
 
-    public static WebSocketFrame of(WebSocketOpCode opCode, byte[] payloadData) {
-        checkFrame(opCode, payloadData, true);
-        return new WebSocketFrame(opCode, payloadData, true);
-    }
-
     public WebSocketOpCode opCode() {
         return opCode;
     }
