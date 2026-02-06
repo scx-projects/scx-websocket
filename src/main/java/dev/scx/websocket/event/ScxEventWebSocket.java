@@ -24,6 +24,8 @@ public interface ScxEventWebSocket extends ScxWebSocket {
 
     ScxEventWebSocket onBinaryMessage(BinaryMessageHandler binaryMessageHandler);
 
+    ScxEventWebSocket onContinuation(BinaryMessageHandler binaryMessageHandler);
+
     ScxEventWebSocket onPing(Consumer<byte[]> pingHandler);
 
     ScxEventWebSocket onPong(Consumer<byte[]> pongHandler);

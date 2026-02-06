@@ -3,17 +3,14 @@ package dev.scx.websocket.message;
 import dev.scx.websocket.ScxWebSocket;
 import dev.scx.websocket.WebSocketFrame;
 import dev.scx.websocket.WebSocketOpCode;
-import dev.scx.websocket.close_info.ScxWebSocketCloseInfo;
 import dev.scx.websocket.close_info.WebSocketCloseInfo;
 import dev.scx.websocket.exception.WebSocketIOException;
 import dev.scx.websocket.exception.WebSocketInvalidStateException;
 import dev.scx.websocket.exception.WebSocketProtocolException;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
 
 import static dev.scx.websocket.WebSocketOpCode.*;
-import static dev.scx.websocket.close_info.WebSocketCloseInfo.TOO_BIG;
 
 /// ScxMessageWebSocket
 ///

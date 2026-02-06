@@ -2,7 +2,9 @@ package dev.scx.websocket.event;
 
 import dev.scx.websocket.ScxWebSocket;
 import dev.scx.websocket.WebSocketFrame;
-import dev.scx.websocket.exception.WebSocketException;
+import dev.scx.websocket.exception.WebSocketIOException;
+import dev.scx.websocket.exception.WebSocketInvalidStateException;
+import dev.scx.websocket.exception.WebSocketProtocolException;
 
 import java.lang.System.Logger;
 import java.util.concurrent.Executor;
@@ -50,12 +52,12 @@ class ScxEventWebSocketImpl implements ScxEventWebSocket {
     }
 
     @Override
-    public WebSocketFrame readFrame() throws WebSocketException {
+    public WebSocketFrame readFrame() throws WebSocketIOException, WebSocketProtocolException {
         return ws.readFrame();
     }
 
     @Override
-    public void sendFrame(WebSocketFrame frame) throws WebSocketException {
+    public void sendFrame(WebSocketFrame frame) throws WebSocketIOException, WebSocketInvalidStateException {
         ws.sendFrame(frame);
     }
 
@@ -74,6 +76,11 @@ class ScxEventWebSocketImpl implements ScxEventWebSocket {
     public ScxEventWebSocket onBinaryMessage(BinaryMessageHandler binaryMessageHandler) {
         this.binaryMessageHandler = binaryMessageHandler;
         return this;
+    }
+
+    @Override
+    public ScxEventWebSocket onContinuation(BinaryMessageHandler binaryMessageHandler) {
+        return null;
     }
 
     @Override
