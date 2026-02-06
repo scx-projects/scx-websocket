@@ -15,7 +15,7 @@ final class WebSocketFrameHelper {
         }
         switch (opCode) {
             case PING, PONG -> checkControlFrame(opCode, payloadData, fin);
-            case CLOSE -> checkCloseFrame(opCode,payloadData,fin);
+            case CLOSE -> checkCloseFrame(opCode, payloadData, fin);
         }
     }
 
