@@ -39,7 +39,7 @@ import dev.scx.io.exception.*;
 public final class WebSocketProtocolFrameHelper {
 
     /// 完全原样读取 protocolFrame, 不涉及任何校验或掩码处理.
-    public static WebSocketProtocolFrame readProtocolFrame(ByteInput byteInput, long maxWebSocketFrameSize) throws NoMoreDataException, ScxInputException, InputAlreadyClosedException, PayloadTooBigException {
+    public static WebSocketProtocolFrame readProtocolFrameHeader(ByteInput byteInput) throws NoMoreDataException, ScxInputException, InputAlreadyClosedException {
         var protocolFrame = new WebSocketProtocolFrame();
 
         byte b1 = byteInput.read();
@@ -78,10 +78,11 @@ public final class WebSocketProtocolFrameHelper {
             protocolFrame.maskingKey = byteInput.readFully(4);
         }
 
-        // 这里检查 最大帧大小
-        if (protocolFrame.payloadLength > maxWebSocketFrameSize) {
-            throw new PayloadTooBigException();
-        }
+        return protocolFrame;
+    }
+
+    /// 完全原样读取 protocolFrame, 不涉及任何校验或掩码处理.
+    public static WebSocketProtocolFrame readProtocolFramePayload(WebSocketProtocolFrame protocolFrame, ByteInput byteInput) throws NoMoreDataException, ScxInputException, InputAlreadyClosedException {
 
         // 这里我们假设 payloadLength 小于 int 值. 此处强转.
         protocolFrame.payloadData = byteInput.readFully((int) protocolFrame.payloadLength);
