@@ -6,14 +6,40 @@ import dev.scx.io.ByteOutput;
 import dev.scx.io.exception.*;
 import dev.scx.websocket.exception.WebSocketProtocolException;
 
-/// WebSocketProtocolFrameHelper
+/// WebSocket 协议帧二进制编解码辅助工具.
+///
+/// ### 设计意图
+///
+/// 本类仅负责按照 RFC6455 定义的 WebSocket 帧二进制结构, 在字节流与 [WebSocketProtocolFrame] 结构之间进行转换.
+///
+/// 本类遵循:
+///   - 只解析结构, 不判断语义(Parse, do not judge).
+///
+/// 明确不做的事情 (非目标):
+///   - 不进行任何 WebSocket 协议语义校验 (允许非法帧存在)
+///   - 不执行 payload 掩码或反掩码操作
+///   - 不校验控制帧规则(FIN / payload 长度等)
+///   - 不管理 WebSocket 连接状态(close / ping / pong)
+///   - 不做消息分片重组
+///
+/// ### Payload 行为说明
+///
+/// 如果帧为 masked, 则 payloadData 中保存的是 掩码后的原始字节数据, 本类不会进行任何转换.
+///
+/// ### 适用场景
+///   - 协议工具开发
+///   - 代理/中继实现
+///   - 调试与抓包分析工具
+///   - Fuzz 测试
+///
+/// 本类不是安全 WebSocket 实现, 也不适用于直接业务使用.
 ///
 /// @author scx567888
 /// @version 0.0.1
 /// @see <a href="https://www.rfc-editor.org/rfc/rfc6455">https://www.rfc-editor.org/rfc/rfc6455</a>
 public final class WebSocketProtocolFrameHelper {
 
-    /// 完全原样读取 protocolFrame, 不涉及任何掩码处理.
+    /// 完全原样读取 protocolFrame, 不涉及任何校验或掩码处理.
     public static WebSocketProtocolFrame readProtocolFrame(ByteInput byteInput, long maxWebSocketFrameSize) throws IllegalArgumentException, NoMoreDataException, ScxInputException, InputAlreadyClosedException, WebSocketProtocolException, PayloadTooBigException {
         var protocolFrame = new WebSocketProtocolFrame();
 
@@ -64,7 +90,7 @@ public final class WebSocketProtocolFrameHelper {
         return protocolFrame;
     }
 
-    /// 完全原样写出 protocolFrame, 不涉及任何掩码处理.
+    /// 完全原样写出 protocolFrame, 不涉及任何校验或掩码处理.
     public static void writeProtocolFrame(WebSocketProtocolFrame protocolFrame, ByteOutput byteOutput) throws ScxOutputException, OutputAlreadyClosedException {
         // 创建 header 防止频繁写入底层.
         byte[] header = new byte[14];
