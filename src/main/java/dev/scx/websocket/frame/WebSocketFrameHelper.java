@@ -1,5 +1,6 @@
 package dev.scx.websocket.frame;
 
+import dev.scx.websocket.exception.WebSocketProtocolException;
 import dev.scx.websocket.op_code.WebSocketOpCode;
 import dev.scx.websocket.protocol_frame.WebSocketProtocolFrame;
 
@@ -40,7 +41,8 @@ final class WebSocketFrameHelper {
         }
     }
 
-    /// 注意此处创建的 WebSocketProtocolFrame 中的 payloadData 还没有被掩码计算.
+    /// 根据 WebSocketFrame 创建 WebSocketProtocolFrame.
+    /// 这里我们无需校验 WebSocketFrame, 因为其构造函数已经保证一定是一个正确的语义.
     public static WebSocketProtocolFrame toProtocolFrame(WebSocketFrame frame, boolean isClient) {
 
         var protocolFrame = new WebSocketProtocolFrame();
@@ -59,14 +61,40 @@ final class WebSocketFrameHelper {
             protocolFrame.maskingKey = null;
         }
 
+        byte[] maskingKey = protocolFrame.maskingKey;
         byte[] payloadData = frame.payloadData();
+
+        // 此处为了性能我们就地更改数组.
+        if (protocolFrame.masked) {
+            for (int i = 0; i < payloadData.length; i = i + 1) {
+                payloadData[i] = (byte) (payloadData[i] ^ maskingKey[i % 4]);
+            }
+        }
+
         protocolFrame.payloadLength = payloadData.length;
         protocolFrame.payloadData = payloadData;
         return protocolFrame;
     }
 
-    public static WebSocketFrame fromProtocolFrame(WebSocketProtocolFrame protocolFrame, boolean isClient) {
-        return WebSocketFrame.of(null,null,false);
+    // todo 这里的校验太薄弱了. 需要加强.
+    public static WebSocketFrame fromProtocolFrame(WebSocketProtocolFrame protocolFrame, boolean isClient) throws WebSocketProtocolException {
+        // 这里可能找不到报错.
+        var opCode = WebSocketOpCode.of(protocolFrame.opCode);
+
+        var fin = protocolFrame.fin;
+
+        var masked = protocolFrame.masked;
+        var maskingKey = protocolFrame.maskingKey;
+        var payloadData = protocolFrame.payloadData;
+
+        // 掩码计算
+        if (masked) {
+            for (int i = 0; i < payloadData.length; i = i + 1) {
+                payloadData[i] = (byte) (payloadData[i] ^ maskingKey[i % 4]);
+            }
+        }
+
+        return WebSocketFrame.of(opCode, payloadData, fin);
     }
 
 }
