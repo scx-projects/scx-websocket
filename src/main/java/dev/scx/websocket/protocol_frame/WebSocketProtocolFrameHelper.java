@@ -4,7 +4,6 @@ import dev.scx.io.ByteChunk;
 import dev.scx.io.ByteInput;
 import dev.scx.io.ByteOutput;
 import dev.scx.io.exception.*;
-import dev.scx.websocket.exception.WebSocketProtocolException;
 
 /// WebSocket 协议帧二进制编解码辅助工具.
 ///
@@ -40,7 +39,7 @@ import dev.scx.websocket.exception.WebSocketProtocolException;
 public final class WebSocketProtocolFrameHelper {
 
     /// 完全原样读取 protocolFrame, 不涉及任何校验或掩码处理.
-    public static WebSocketProtocolFrame readProtocolFrame(ByteInput byteInput, long maxWebSocketFrameSize) throws IllegalArgumentException, NoMoreDataException, ScxInputException, InputAlreadyClosedException, WebSocketProtocolException, PayloadTooBigException {
+    public static WebSocketProtocolFrame readProtocolFrame(ByteInput byteInput, long maxWebSocketFrameSize) throws NoMoreDataException, ScxInputException, InputAlreadyClosedException, PayloadTooBigException {
         var protocolFrame = new WebSocketProtocolFrame();
 
         byte b1 = byteInput.read();
