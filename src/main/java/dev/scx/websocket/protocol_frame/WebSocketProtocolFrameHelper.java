@@ -13,7 +13,7 @@ import dev.scx.websocket.exception.WebSocketProtocolException;
 /// @see <a href="https://www.rfc-editor.org/rfc/rfc6455">https://www.rfc-editor.org/rfc/rfc6455</a>
 public final class WebSocketProtocolFrameHelper {
 
-    /// 读取单个帧
+    /// 完全原样读取 protocolFrame, 不涉及任何掩码处理.
     public static WebSocketProtocolFrame readProtocolFrame(ByteInput byteInput, long maxWebSocketFrameSize) throws IllegalArgumentException, NoMoreDataException, ScxInputException, InputAlreadyClosedException, WebSocketProtocolException, PayloadTooBigException {
         var protocolFrame = new WebSocketProtocolFrame();
 
@@ -64,20 +64,20 @@ public final class WebSocketProtocolFrameHelper {
         return protocolFrame;
     }
 
-    /// 注意这里会直接就地 对 frame 进行掩码. 如果上层需要复用 请自行 copy.
-    public static void writeProtocolFrame(WebSocketProtocolFrame frame, ByteOutput byteOutput) throws ScxOutputException, OutputAlreadyClosedException {
+    /// 完全原样写出 protocolFrame, 不涉及任何掩码处理.
+    public static void writeProtocolFrame(WebSocketProtocolFrame protocolFrame, ByteOutput byteOutput) throws ScxOutputException, OutputAlreadyClosedException {
         // 创建 header 防止频繁写入底层.
         byte[] header = new byte[14];
 
         // 头部
-        header[0] = (byte) ((frame.fin ? 0b1000_0000 : 0) |
-            (frame.rsv1 ? 0b0100_0000 : 0) |
-            (frame.rsv2 ? 0b0010_0000 : 0) |
-            (frame.rsv3 ? 0b0001_0000 : 0) |
-            frame.opCode);
+        header[0] = (byte) ((protocolFrame.fin ? 0b1000_0000 : 0) |
+            (protocolFrame.rsv1 ? 0b0100_0000 : 0) |
+            (protocolFrame.rsv2 ? 0b0010_0000 : 0) |
+            (protocolFrame.rsv3 ? 0b0001_0000 : 0) |
+            protocolFrame.opCode);
 
-        long length = frame.payloadLength;
-        var masked = frame.masked ? 0b1000_0000 : 0;
+        long length = protocolFrame.payloadLength;
+        var masked = protocolFrame.masked ? 0b1000_0000 : 0;
 
         var s = 0;
         if (length < 126L) {
@@ -102,8 +102,8 @@ public final class WebSocketProtocolFrameHelper {
         }
 
         // 写入掩码键 (如果有)
-        if (frame.masked) {
-            byte[] maskingKey = frame.maskingKey;
+        if (protocolFrame.masked) {
+            byte[] maskingKey = protocolFrame.maskingKey;
             header[s] = maskingKey[0];
             header[s + 1] = maskingKey[1];
             header[s + 2] = maskingKey[2];
@@ -114,8 +114,7 @@ public final class WebSocketProtocolFrameHelper {
         // 写出头.
         byteOutput.write(ByteChunk.of(header, 0, s));
 
-        // 处理掩码 (如果有)
-        byte[] payloadData = frame.payloadData;
+        byte[] payloadData = protocolFrame.payloadData;
 
         // 写入有效负载数据
         byteOutput.write(payloadData);
