@@ -1,11 +1,14 @@
-package dev.scx.websocket;
+package dev.scx.websocket.protocol_frame;
 
 import dev.scx.io.ByteChunk;
 import dev.scx.io.ByteInput;
 import dev.scx.io.ByteOutput;
 import dev.scx.io.exception.*;
-import dev.scx.websocket.WebSocketOpCode;
-import dev.scx.websocket.exception.WebSocketException;
+import dev.scx.websocket.close_info.ScxWebSocketCloseInfo;
+import dev.scx.websocket.exception.WebSocketProtocolException;
+import dev.scx.websocket.op_code.WebSocketOpCode;
+
+import static dev.scx.websocket.close_info.WebSocketCloseInfo.TOO_BIG;
 
 /// WebSocketProtocolFrameHelper
 ///
@@ -77,12 +80,12 @@ public final class WebSocketProtocolFrameHelper {
     }
 
     /// 读取单个帧
-    public static WebSocketProtocolFrame readProtocolFrame(ByteInput byteInput, long maxWebSocketFrameSize) throws IllegalArgumentException, NoMoreDataException, ScxInputException, InputAlreadyClosedException, WebSocketException {
+    public static WebSocketProtocolFrame readProtocolFrame(ByteInput byteInput, long maxWebSocketFrameSize) throws IllegalArgumentException, NoMoreDataException, ScxInputException, InputAlreadyClosedException, WebSocketProtocolException {
         var webSocketFrame = readProtocolFrameHeader(byteInput);
 
         // 这里检查 最大帧大小
         if (webSocketFrame.payloadLength > maxWebSocketFrameSize) {
-            throw new WebSocketException("Frame too big");
+            throw new WebSocketProtocolException(ScxWebSocketCloseInfo.of(TOO_BIG.code(),"Frame too big"));
         }
 
         return readProtocolFramePayload(webSocketFrame, byteInput);

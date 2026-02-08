@@ -1,4 +1,4 @@
-package dev.scx.websocket;
+package dev.scx.websocket.op_code;
 
 /// WebSocket 操作码
 ///
