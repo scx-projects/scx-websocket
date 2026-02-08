@@ -5,6 +5,8 @@ import dev.scx.websocket.exception.WebSocketProtocolException;
 
 /// ScxFrameWebSocket 是一个帧级 (frame-level) 的 WebSocket 接口,
 ///
+/// 只负责保证读取和写入时帧的协议合法性.
+///
 /// 调用 [#close()] 表示一次资源级的终止 (abort), 不属于 WebSocket 协议层的 closing handshake.
 ///
 /// @author scx567888
