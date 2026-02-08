@@ -5,6 +5,7 @@ import dev.scx.websocket.frame.WebSocketFrame;
 import dev.scx.websocket.exception.WebSocketIOException;
 import dev.scx.websocket.exception.WebSocketInvalidStateException;
 import dev.scx.websocket.exception.WebSocketProtocolException;
+import dev.scx.websocket.message.ScxMessageWebSocket;
 
 import java.lang.System.Logger;
 import java.util.concurrent.Executor;
@@ -24,7 +25,7 @@ class ScxEventWebSocketImpl implements ScxEventWebSocket {
 
     private static final Logger LOGGER = getLogger(ScxEventWebSocketImpl.class.getName());
 
-    private final ScxFrameWebSocket ws;
+    private final ScxMessageWebSocket ws;
     private final Executor callbackExecutor;// 回调执行器
     protected ContinuationType continuationType;
     private TextMessageHandler textMessageHandler;
@@ -35,11 +36,11 @@ class ScxEventWebSocketImpl implements ScxEventWebSocket {
     private Consumer<Throwable> errorHandler;
     private boolean running;
 
-    public ScxEventWebSocketImpl(ScxFrameWebSocket websocket) {
+    public ScxEventWebSocketImpl(ScxMessageWebSocket websocket) {
         this(websocket, null);
     }
 
-    public ScxEventWebSocketImpl(ScxFrameWebSocket websocket, Executor callbackExecutor) {
+    public ScxEventWebSocketImpl(ScxMessageWebSocket websocket, Executor callbackExecutor) {
         this.ws = websocket;
         this.callbackExecutor = callbackExecutor;
         this.textMessageHandler = null;

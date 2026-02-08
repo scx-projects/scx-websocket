@@ -3,6 +3,7 @@ package dev.scx.websocket.frame;
 import dev.scx.websocket.exception.WebSocketIOException;
 import dev.scx.websocket.exception.WebSocketProtocolException;
 
+// 可能需要 sendXXX 的默认方法
 /// ScxFrameWebSocket 是一个帧级 (frame-level) 的 WebSocket 接口,
 ///
 /// 只负责保证读取和写入时帧的协议合法性.
