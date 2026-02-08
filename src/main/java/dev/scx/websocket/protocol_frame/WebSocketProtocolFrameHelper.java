@@ -4,11 +4,7 @@ import dev.scx.io.ByteChunk;
 import dev.scx.io.ByteInput;
 import dev.scx.io.ByteOutput;
 import dev.scx.io.exception.*;
-import dev.scx.websocket.close_info.ScxWebSocketCloseInfo;
 import dev.scx.websocket.exception.WebSocketProtocolException;
-import dev.scx.websocket.op_code.WebSocketOpCode;
-
-import static dev.scx.websocket.close_info.WebSocketCloseInfo.TOO_BIG;
 
 /// WebSocketProtocolFrameHelper
 ///
@@ -17,7 +13,8 @@ import static dev.scx.websocket.close_info.WebSocketCloseInfo.TOO_BIG;
 /// @see <a href="https://www.rfc-editor.org/rfc/rfc6455">https://www.rfc-editor.org/rfc/rfc6455</a>
 public final class WebSocketProtocolFrameHelper {
 
-    private static WebSocketProtocolFrame readProtocolFrameHeader(ByteInput byteInput) throws IllegalArgumentException, NoMoreDataException, ScxInputException, InputAlreadyClosedException {
+    /// 读取单个帧
+    public static WebSocketProtocolFrame readProtocolFrame(ByteInput byteInput, long maxWebSocketFrameSize) throws IllegalArgumentException, NoMoreDataException, ScxInputException, InputAlreadyClosedException, WebSocketProtocolException, PayloadTooBigException {
         var protocolFrame = new WebSocketProtocolFrame();
 
         byte b1 = byteInput.read();
@@ -26,7 +23,7 @@ public final class WebSocketProtocolFrameHelper {
         protocolFrame.rsv1 = (b1 & 0b0100_0000) != 0;
         protocolFrame.rsv2 = (b1 & 0b0010_0000) != 0;
         protocolFrame.rsv3 = (b1 & 0b0001_0000) != 0;
-        protocolFrame.opCode = WebSocketOpCode.of(b1 & 0b0000_1111);
+        protocolFrame.opCode = b1 & 0b0000_1111;
 
         byte b2 = byteInput.read();
 
@@ -56,39 +53,15 @@ public final class WebSocketProtocolFrameHelper {
             protocolFrame.maskingKey = byteInput.readFully(4);
         }
 
-        return protocolFrame;
-    }
-
-    private static WebSocketProtocolFrame readProtocolFramePayload(WebSocketProtocolFrame frame, ByteInput byteInput) throws NoMoreDataException, ScxInputException, InputAlreadyClosedException {
-        var payloadLength = frame.payloadLength;
-        var masked = frame.masked;
-        var maskingKey = frame.maskingKey;
+        // 这里检查 最大帧大小
+        if (protocolFrame.payloadLength > maxWebSocketFrameSize) {
+            throw new PayloadTooBigException();
+        }
 
         // 这里我们假设 payloadLength 小于 int 值. 此处强转.
-        var payloadData = byteInput.readFully((int) payloadLength);
+        protocolFrame.payloadData = byteInput.readFully((int) protocolFrame.payloadLength);
 
-        // 掩码计算
-        if (masked) {
-            for (int i = 0; i < payloadData.length; i = i + 1) {
-                payloadData[i] = (byte) (payloadData[i] ^ maskingKey[i % 4]);
-            }
-        }
-
-        frame.payloadData = payloadData;
-
-        return frame;
-    }
-
-    /// 读取单个帧
-    public static WebSocketProtocolFrame readProtocolFrame(ByteInput byteInput, long maxWebSocketFrameSize) throws IllegalArgumentException, NoMoreDataException, ScxInputException, InputAlreadyClosedException, WebSocketProtocolException {
-        var webSocketFrame = readProtocolFrameHeader(byteInput);
-
-        // 这里检查 最大帧大小
-        if (webSocketFrame.payloadLength > maxWebSocketFrameSize) {
-            throw new WebSocketProtocolException(ScxWebSocketCloseInfo.of(TOO_BIG.code(),"Frame too big"));
-        }
-
-        return readProtocolFramePayload(webSocketFrame, byteInput);
+        return protocolFrame;
     }
 
     /// 注意这里会直接就地 对 frame 进行掩码. 如果上层需要复用 请自行 copy.
@@ -101,7 +74,7 @@ public final class WebSocketProtocolFrameHelper {
             (frame.rsv1 ? 0b0100_0000 : 0) |
             (frame.rsv2 ? 0b0010_0000 : 0) |
             (frame.rsv3 ? 0b0001_0000 : 0) |
-            frame.opCode.code());
+            frame.opCode);
 
         long length = frame.payloadLength;
         var masked = frame.masked ? 0b1000_0000 : 0;
@@ -143,13 +116,6 @@ public final class WebSocketProtocolFrameHelper {
 
         // 处理掩码 (如果有)
         byte[] payloadData = frame.payloadData;
-        byte[] maskingKey = frame.maskingKey;
-        // 此处为了性能我们就地更改数组.
-        if (frame.masked) {
-            for (int i = 0; i < payloadData.length; i = i + 1) {
-                payloadData[i] = (byte) (payloadData[i] ^ maskingKey[i % 4]);
-            }
-        }
 
         // 写入有效负载数据
         byteOutput.write(payloadData);
