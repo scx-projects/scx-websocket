@@ -2,7 +2,7 @@ package dev.scx.websocket.message;
 
 import dev.scx.websocket.frame.ScxFrameWebSocket;
 import dev.scx.websocket.frame.WebSocketFrame;
-import dev.scx.websocket.WebSocketOpCode;
+import dev.scx.websocket.op_code.WebSocketOpCode;
 import dev.scx.websocket.close_info.WebSocketCloseInfo;
 import dev.scx.websocket.exception.WebSocketIOException;
 import dev.scx.websocket.exception.WebSocketInvalidStateException;
@@ -10,13 +10,13 @@ import dev.scx.websocket.exception.WebSocketProtocolException;
 
 import java.io.ByteArrayOutputStream;
 
-import static dev.scx.websocket.WebSocketOpCode.*;
+import static dev.scx.websocket.op_code.WebSocketOpCode.*;
 
 /// ScxMessageWebSocket
 ///
 /// readFrame 会聚合 CONTINUATION.
 ///
-public final class ScxMessageWebSocketImpl implements ScxFrameWebSocket {
+public final class ScxMessageWebSocketImpl implements ScxMessageWebSocket {
 
     private final ScxFrameWebSocket scxWebSocket;
     private final int maxWebSocketMessageSize;
@@ -129,6 +129,16 @@ public final class ScxMessageWebSocketImpl implements ScxFrameWebSocket {
     @Override
     public void sendFrame(WebSocketFrame frame) throws WebSocketIOException, WebSocketInvalidStateException {
         this.scxWebSocket.sendFrame(frame);
+    }
+
+    @Override
+    public WebSocketMessage readMessage() throws WebSocketIOException, WebSocketProtocolException {
+        return null;
+    }
+
+    @Override
+    public void sendMessage(WebSocketMessage message) throws WebSocketIOException, WebSocketInvalidStateException {
+
     }
 
     @Override
