@@ -1,6 +1,6 @@
 package dev.scx.websocket.frame;
 
-import dev.scx.websocket.WebSocketOpCode;
+import dev.scx.websocket.op_code.WebSocketOpCode;
 
 import static dev.scx.websocket.frame.WebSocketFrameHelper.checkFrame;
 
