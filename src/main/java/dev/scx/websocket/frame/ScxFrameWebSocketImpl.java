@@ -19,7 +19,7 @@ final class ScxFrameWebSocketImpl implements ScxFrameWebSocket {
 
     private final ByteEndpoint endpoint; // 端点
     private final boolean isClient; // 是否是客户端 客户端需要加掩码
-    private final long maxWebSocketFrameSize; // 最大 帧大小. 只约束接受帧.
+    private final long maxWebSocketFrameSize; // 最大 帧大小. 只约束接收帧.
     private final ReentrantLock lock; // 为了防止底层的 ByteOutput 被乱序写入 此处需要加锁
 
     public ScxFrameWebSocketImpl(ByteEndpoint endpoint, boolean isClient, long maxWebSocketFrameSize) {

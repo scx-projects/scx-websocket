@@ -163,7 +163,7 @@ final class ScxEventWebSocketImpl implements ScxEventWebSocket {
         try {
             _callOnText(textMessage.text());
         } catch (Exception e) {
-            LOGGER.log(ERROR, "Error while calling onTextMessage : ", e);
+            LOGGER.log(ERROR, "Error while calling onText : ", e);
         }
     }
 
@@ -171,7 +171,7 @@ final class ScxEventWebSocketImpl implements ScxEventWebSocket {
         try {
             _callOnBinary(binaryMessage.binary());
         } catch (Exception e) {
-            LOGGER.log(ERROR, "Error while call onBinaryMessage : ", e);
+            LOGGER.log(ERROR, "Error while call onBinary : ", e);
         }
     }
 
