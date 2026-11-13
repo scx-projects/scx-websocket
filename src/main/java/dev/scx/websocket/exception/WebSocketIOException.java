@@ -2,7 +2,7 @@ package dev.scx.websocket.exception;
 
 import dev.scx.io.exception.*;
 
-/// WebSocketIoException 表示 WebSocket 底层 I/O 不可继续使用, 包括但不限于:
+/// WebSocketIOException 表示 WebSocket 底层 I/O 不可继续使用, 包括但不限于:
 ///
 /// - 对端关闭连接 (EOF) [NoMoreDataException].
 /// - 本地输入/输出已关闭 [InputAlreadyClosedException] / [OutputAlreadyClosedException].
